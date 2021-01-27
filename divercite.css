@@ -67,6 +67,18 @@
     }
 */
 
+#board {
+    width: 536px;
+    height: 528px;
+    background-color: blue;
+    position: relative;
+}
 
+.square {
+    width: 62px;
+    height: 62px;
+    position: absolute;
+    background-color: red;
+}
 
 
