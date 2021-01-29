@@ -26,74 +26,37 @@
   
   require_once( APP_BASE_PATH."view/common/game.view.php" );
   
-  class view_divercite_divercite extends game_view
-  {
+  class view_divercite_divercite extends game_view {
     function getGameName() {
         return "divercite";
     }    
-  	function build_page( $viewArgs )
-  	{		
+  	function build_page( $viewArgs ) {		
   	    // Get players & players number
         $players = $this->game->loadPlayersBasicInfos();
         $players_nbr = count( $players );
 
         /*********** Place your code below:  ************/
-        $this->page->begin_block( "reversi_reversi", "square" );
+        $this->page->begin_block( "divercite_divercite", "square" );
         
-        $hor_scale = 64.8;
-        $ver_scale = 64.4;
-        for( $x=1; $x<=8; $x++ )
-        {
-            for( $y=1; $y<=8; $y++ )
-            {
+        $hor_scale = 96;
+        $ver_scale = 96;
+        for( $x=1; $x<=9; $x++ ) {
+            if ($x % 2 != 0) {
+                $clm = 5;
+                $pad = 0;
+            } else {
+                $clm = 4;
+                $pad = 40;
+            }
+            for( $y=1; $y<=$clm; $y++ ) {
                 $this->page->insert_block( "square", array(
                     'X' => $x,
                     'Y' => $y,
-                    'LEFT' => round( ($x-1)*$hor_scale+10 ),
-                    'TOP' => round( ($y-1)*$ver_scale+7 )
+                    'TOP' => round( ($x-1)*$hor_scale+10 ),
+                    'LEFT' => round( ($y-1)*$ver_scale+7 + $pad )
                 ) );
             }        
         }
-
-        /*
-        
-        // Examples: set the value of some element defined in your tpl file like this: {MY_VARIABLE_ELEMENT}
-
-        // Display a specific number / string
-        $this->tpl['MY_VARIABLE_ELEMENT'] = $number_to_display;
-
-        // Display a string to be translated in all languages: 
-        $this->tpl['MY_VARIABLE_ELEMENT'] = self::_("A string to be translated");
-
-        // Display some HTML content of your own:
-        $this->tpl['MY_VARIABLE_ELEMENT'] = self::raw( $some_html_code );
-        
-        */
-        
-        /*
-        
-        // Example: display a specific HTML block for each player in this game.
-        // (note: the block is defined in your .tpl file like this:
-        //      <!-- BEGIN myblock --> 
-        //          ... my HTML code ...
-        //      <!-- END myblock --> 
-        
-
-        $this->page->begin_block( "divercite_divercite", "myblock" );
-        foreach( $players as $player )
-        {
-            $this->page->insert_block( "myblock", array( 
-                                                    "PLAYER_NAME" => $player['player_name'],
-                                                    "SOME_VARIABLE" => $some_value
-                                                    ...
-                                                     ) );
-        }
-        
-        */
-
-
-
-        /*********** Do not change anything below this line  ************/
   	}
   }
   

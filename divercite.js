@@ -18,35 +18,46 @@
 define([
     "dojo","dojo/_base/declare",
     "ebg/core/gamegui",
-    "ebg/counter"
+    "ebg/counter",
+    "ebg/stock"
 ],
 function (dojo, declare) {
     return declare("bgagame.divercite", ebg.core.gamegui, {
         constructor: function(){
             console.log('divercite constructor');
               
-            // Here, you can init the global variables of your user interface
-            // Example:
-            // this.myGlobalValue = 0;
-
+            this.piece_width = 96;
+            this.piece_height = 96;
         },
-        
-        /*
-            setup:
-            
-            This method must set up the game user interface according to current game situation specified
-            in parameters.
-            
-            The method is called each time the game interface is displayed to a player, ie:
-            _ when the game starts
-            _ when a player refreshes the game page (F5)
-            
-            "gamedatas" argument contains all datas retrieved by your "getAllDatas" PHP method.
-        */
         
         setup: function( gamedatas )
         {
             console.log( "Starting game setup" );
+
+            this.playerCities = new ebg.stock();
+            this.playerRessources = new ebg.stock();
+            this.playerCities.create(this, $('mycities'), this.piece_width, this.piece_height);
+            this.playerRessources.create(this, $('myressources'), this.piece_width, this.piece_height);
+            this.playerCities.image_items_per_row = 4;
+            this.playerRessources.image_items_per_row = 4;
+
+            // dojo.connect( this.playerHand, 'onChangeSelection', this, 'onPlayerHandSelectionChanged' );
+            for (var value = 1; value <= 4; value++) {
+                // Build card type id
+                var card_type_id = this.getCardUniqueId(1, value);
+                var player_color = 'city_black_';
+                var result = ["blue", "red", "green", "yellow"][value - 1];
+                this.playerCities.addItemType(card_type_id, card_type_id, g_gamethemeurl + 'img/pieces/' + player_color + result + '.png', card_type_id);
+                this.playerCities.addToStockWithId( card_type_id, card_type_id );
+            }
+            for (var value = 1; value <= 4; value++) {
+                // Build card type id
+                var card_type_id = this.getCardUniqueId(2, value);
+                var player_color = 'ressource_';
+                var result = ["blue", "red", "green", "yellow"][value - 1];
+                this.playerRessources.addItemType(card_type_id, card_type_id, g_gamethemeurl + 'img/pieces/' + player_color + result + '.png', card_type_id);
+                this.playerRessources.addToStockWithId( card_type_id, card_type_id );
+            }
             
             // Setting up player boards
             for( var player_id in gamedatas.players )
@@ -55,9 +66,24 @@ function (dojo, declare) {
                          
                 // TODO: Setting up players boards if needed
             }
-            
-            // TODO: Set up your game interface here, according to "gamedatas"
-            
+
+            // // TODO: Set up your game interface here, according to "gamedatas"
+            // // Cards in player's hand
+            // for ( var i in this.gamedatas.hand) {
+            //     var card = this.gamedatas.hand[i];
+            //     var color = card.type;
+            //     var value = card.type_arg;
+            //     this.playerHand.addToStockWithId(this.getCardUniqueId(color, value), card.id);
+            // }
+
+            // // Cards played on table
+            // for (i in this.gamedatas.cardsontable) {
+            //     var card = this.gamedatas.cardsontable[i];
+            //     var color = card.type;
+            //     var value = card.type_arg;
+            //     var player_id = card.location_arg;
+            //     this.playCardOnTable(player_id, color, value, card.id);
+            // }
  
             // Setup game notifications to handle (see "setupNotifications" method below)
             this.setupNotifications();
@@ -150,6 +176,36 @@ function (dojo, declare) {
 
         ///////////////////////////////////////////////////
         //// Utility methods
+
+        getCardUniqueId : function(color, value) {
+            return (color - 1) * 4 + (value - 1);
+        },
+
+        // playCardOnTable : function(player_id, color, value, card_id) {
+        //     // player_id => direction
+        //     dojo.place(this.format_block('jstpl_piece', {
+        //         x : this.piece_width * (value - 2),
+        //         y : this.piece_height * (color - 1),
+        //         player_id : player_id
+        //     }), 'playertablecard_' + player_id);
+
+        //     if (player_id != this.player_id) {
+        //         // Some opponent played a card
+        //         // Move card from player panel
+        //         this.placeOnObject('cardontable_' + player_id, 'overall_player_board_' + player_id);
+        //     } else {
+        //         // You played a card. If it exists in your hand, move card from there and remove
+        //         // corresponding item
+
+        //         if ($('myhand_item_' + card_id)) {
+        //             this.placeOnObject('cardontable_' + player_id, 'myhand_item_' + card_id);
+        //             this.playerHand.removeFromStockById(card_id);
+        //         }
+        //     }
+
+        //     // In any case: move it to its final destination
+        //     this.slideToObject('cardontable_' + player_id, 'playertablecard_' + player_id).play();
+        // },
         
         /*
         
@@ -157,7 +213,16 @@ function (dojo, declare) {
             script.
         
         */
-
+    //    addTokenOnBoard: function( x, y, player )
+    //    {
+    //        dojo.place( this.format_block( 'jstpl_token', {
+    //            x_y: x+'_'+y,
+    //            color: this.gamedatas.players[ player ].color
+    //        } ) , 'tokens' );
+           
+    //        this.placeOnObject( 'token_'+x+'_'+y, 'overall_player_board_'+player );
+    //        this.slideToObject( 'token_'+x+'_'+y, 'square_'+x+'_'+y ).play();
+    //    },
 
         ///////////////////////////////////////////////////
         //// Player's action

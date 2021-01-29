@@ -13,13 +13,13 @@
 $gameinfos = array( 
 
 // Name of the game in English (will serve as the basis for translation) 
-'game_name' => "Divercite",
+'game_name' => "Divercité",
 
 // Game designer (or game designers, separated by commas)
-'designer' => 'Gregoire Boulland',       
+'designer' => 'Grégoire Boulland',       
 
 // Game artist (or game artists, separated by commas)
-'artist' => 'Gregoire Boulland',         
+'artist' => 'Grégoire Boulland',         
 
 // Year of FIRST publication of this game. Can be negative.
 'year' => 2019,                 
