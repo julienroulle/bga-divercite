@@ -32,20 +32,19 @@ function (dojo, declare) {
         
         setup: function( gamedatas )
         {
-            console.log( "Starting game setup" );
+            console.log( "Starting game setup", gamedatas );
 
             this.playerCities = new ebg.stock();
             this.playerRessources = new ebg.stock();
-            this.playerCities.create(this, $('mycities'), this.piece_width, this.piece_height);
-            this.playerRessources.create(this, $('myressources'), this.piece_width, this.piece_height);
+            this.playerCities.create(this, $('my_cities'), this.piece_width, this.piece_height);
+            this.playerRessources.create(this, $('my_ressources'), this.piece_width, this.piece_height);
             this.playerCities.image_items_per_row = 4;
             this.playerRessources.image_items_per_row = 4;
 
-            // dojo.connect( this.playerHand, 'onChangeSelection', this, 'onPlayerHandSelectionChanged' );
             for (var value = 1; value <= 4; value++) {
                 // Build card type id
                 var card_type_id = this.getCardUniqueId(1, value);
-                var player_color = 'city_black_';
+                var player_color = 'city_white_';
                 var result = ["blue", "red", "green", "yellow"][value - 1];
                 this.playerCities.addItemType(card_type_id, card_type_id, g_gamethemeurl + 'img/pieces/' + player_color + result + '.png', card_type_id);
                 this.playerCities.addToStockWithId( card_type_id, card_type_id );
@@ -58,6 +57,33 @@ function (dojo, declare) {
                 this.playerRessources.addItemType(card_type_id, card_type_id, g_gamethemeurl + 'img/pieces/' + player_color + result + '.png', card_type_id);
                 this.playerRessources.addToStockWithId( card_type_id, card_type_id );
             }
+
+            dojo.connect( this.playerCities, 'onChangeSelection', this, 'onPlayerHandSelectionChanged' );
+
+            this.opponentCities = new ebg.stock();
+            this.opponentRessources = new ebg.stock();
+            this.opponentCities.create(this, $('opponent_cities'), this.piece_width, this.piece_height);
+            this.opponentRessources.create(this, $('opponent_ressources'), this.piece_width, this.piece_height);
+            this.opponentCities.image_items_per_row = 4;
+            this.opponentRessources.image_items_per_row = 4;
+
+            // dojo.connect( this.opponentHand, 'onChangeSelection', this, 'onopponentHandSelectionChanged' );
+            for (var value = 1; value <= 4; value++) {
+                // Build card type id
+                var card_type_id = this.getCardUniqueId(1, value);
+                var opponent_color = 'city_black_';
+                var result = ["blue", "red", "green", "yellow"][value - 1];
+                this.opponentCities.addItemType(card_type_id, card_type_id, g_gamethemeurl + 'img/pieces/' + opponent_color + result + '.png', card_type_id);
+                this.opponentCities.addToStockWithId( card_type_id, card_type_id );
+            }
+            for (var value = 1; value <= 4; value++) {
+                // Build card type id
+                var card_type_id = this.getCardUniqueId(2, value);
+                var opponent_color = 'ressource_';
+                var result = ["blue", "red", "green", "yellow"][value - 1];
+                this.opponentRessources.addItemType(card_type_id, card_type_id, g_gamethemeurl + 'img/pieces/' + opponent_color + result + '.png', card_type_id);
+                this.opponentRessources.addToStockWithId( card_type_id, card_type_id );
+            }
             
             // Setting up player boards
             for( var player_id in gamedatas.players )
@@ -67,28 +93,61 @@ function (dojo, declare) {
                 // TODO: Setting up players boards if needed
             }
 
-            // // TODO: Set up your game interface here, according to "gamedatas"
-            // // Cards in player's hand
-            // for ( var i in this.gamedatas.hand) {
-            //     var card = this.gamedatas.hand[i];
-            //     var color = card.type;
-            //     var value = card.type_arg;
-            //     this.playerHand.addToStockWithId(this.getCardUniqueId(color, value), card.id);
-            // }
+            dojo.query('.piece').connect('onclick', this, 'onSelectPiece');
 
-            // // Cards played on table
-            // for (i in this.gamedatas.cardsontable) {
-            //     var card = this.gamedatas.cardsontable[i];
-            //     var color = card.type;
-            //     var value = card.type_arg;
-            //     var player_id = card.location_arg;
-            //     this.playCardOnTable(player_id, color, value, card.id);
-            // }
- 
-            // Setup game notifications to handle (see "setupNotifications" method below)
+            dojo.query('.square').connect('onclick', this, 'onPlacePiece');
             this.setupNotifications();
 
             console.log( "Ending game setup" );
+        },
+
+        onPlayerHandSelectionChanged : function() {
+            var items = this.playerCities.getSelectedItems();
+            console.log(items)
+
+            if (items.length > 0) {
+                if (this.checkAction('placeCity', true)) {
+                    // Can play a card
+
+                    var card_id = items[0].id;
+                    console.log("on placeCity "+card_id);
+
+                    this.playerCities.unselectAll();
+                } else {
+                    this.playerCities.unselectAll();
+                }
+            }
+        },
+
+        onSelectPiece : function(evt) {
+            dojo.stopEvent(evt);
+            // var pieceNumber = evt.currentTarget.id;
+            console.log('onSelectPiece')
+
+            // if (this.checkAction('selectPiece')) {
+            //     this.ajaxcall("/divercite/divercite/selectPiece.html", {
+            //         number : pieceNumber
+            //     }, this, function(result) {
+            //     });
+
+            // }
+
+        },
+
+        onPlacePiece : function(evt) {
+            dojo.stopEvent(evt);
+            // var coords = evt.currentTarget.id.split('_');
+            // var x = coords[1];
+            // var y = coords[2];
+            console.log('onPlacePiece')
+            // if (this.checkAction('placePiece')) {
+            //     this.ajaxcall("/divercite/divercite/placePiece.html", {
+            //         x : x,
+            //         y : y
+            //     }, this, function(result) {
+            //     });
+            // }
+
         },
        
 
@@ -271,52 +330,26 @@ function (dojo, declare) {
         },        
         
         */
-
-        
-        ///////////////////////////////////////////////////
-        //// Reaction to cometD notifications
-
-        /*
-            setupNotifications:
-            
-            In this method, you associate each of your game notifications with your local method to handle it.
-            
-            Note: game notification names correspond to "notifyAllPlayers" and "notifyPlayer" calls in
-                  your divercite.game.php file.
-        
-        */
         setupNotifications: function()
         {
             console.log( 'notifications subscriptions setup' );
-            
-            // TODO: here, associate your game notifications with local methods
-            
-            // Example 1: standard notification handling
-            // dojo.subscribe( 'cardPlayed', this, "notif_cardPlayed" );
-            
-            // Example 2: standard notification handling + tell the user interface to wait
-            //            during 3 seconds after calling the method in order to let the players
-            //            see what is happening in the game.
-            // dojo.subscribe( 'cardPlayed', this, "notif_cardPlayed" );
-            // this.notifqueue.setSynchronous( 'cardPlayed', 3000 );
-            // 
+
+            dojo.subscribe('selectPiece', this, "notif_selectPiece");
+            this.notifqueue.setSynchronous('selectPiece', 500);
+            dojo.subscribe('placePiece', this, "notif_placePiece");
+            this.notifqueue.setSynchronous('placePiece', 1500);
         },  
-        
-        // TODO: from this point and below, you can write your game notifications handling methods
-        
-        /*
-        Example:
-        
-        notif_cardPlayed: function( notif )
-        {
-            console.log( 'notif_cardPlayed' );
-            console.log( notif );
-            
-            // Note: notif.args contains the arguments specified during you "notifyAllPlayers" / "notifyPlayer" PHP call
-            
-            // TODO: play the card in the user interface.
-        },    
-        
-        */
+		
+        notif_selectPiece : function(notif) {
+            //dojo.fadeOut({node: 'unplayedpiece_' + notif.args.number});
+            dojo.destroy('unplayedpiece_' + notif.args.number);
+            this.setSelectedPiece(notif.args.number, notif.args.properties);
+        },
+
+        notif_placePiece : function(notif) {
+            dojo.empty('selected_box');
+            this.setSelectedPiece(null);
+            this.addPieceOnPosition(notif.args.number, notif.args.x, notif.args.y, notif.args.properties);
+        },
    });             
 });

@@ -37,7 +37,22 @@
             $this->view = "divercite_divercite";
             self::trace( "Complete reinitialization of board game" );
       }
-  	} 
+    } 
+    
+    public function selectPiece() {
+  		self::setAjaxMode();
+  		$number = self::getArg( "number", AT_posint, true );
+  		$result = $this->game->selectPiece( $number );
+  		self::ajaxResponse();
+  	}
+  	
+  	public function placePiece() {
+  		self::setAjaxMode();
+  		$x = self::getArg( "x", AT_posint, true );
+  		$y = self::getArg( "y", AT_posint, true );
+  		$result = $this->game->placePiece( $x, $y );
+  		self::ajaxResponse();
+  	}
   	
   	// TODO: defines your action entry points there
 

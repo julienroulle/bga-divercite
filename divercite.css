@@ -43,25 +43,34 @@
 */
 
 #board {
-    width: 500px;
-    height: 900px;
-    background-color: rgb(40, 37, 199);
-    position: relative;
+    width: 700px;
+    height: 700px;
+    background-size: contain;
+    background-image: url('img/game_board.png');
+    float: left;
+    margin-left: 200px;
 }
 
 .square {
-    width: 90px;
-    height: 90px;
+    width: 60px;
+    height: 60px;
     position: absolute;
-    /* background-image: url('img/tiles/1.png'); */
-    /* z-index: 8; */
+    transform: rotate(45deg);
     background-color: rgb(39, 44, 44);
+    opacity: 0.8;
 }
 
 .piece {
     position: absolute;
     width: 96px;
     height: 96px;
+}
+
+.piecebox {
+    float: left;
+    width: 30%;
+    margin: 64px;
+    margin-bottom: 0px;
 }
 
 .token {

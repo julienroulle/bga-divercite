@@ -1,24 +1,21 @@
 {OVERALL_GAME_HEADER}
 
-<div id="opponent_wrap" class="whiteblock">
-    <h3>OPPONENT_HAND</h3>
-    <div id="mycities"></div>
-    <div id="myressources"></div>
-</div>
-
 <div id="board">
     <!-- BEGIN square -->
         <div id="square_{X}_{Y}" class="square" style="left: {LEFT}px; top: {TOP}px;"></div>
     <!-- END square -->
-    
-    <div id="discs">
-    </div>
 </div>
 
-<div id="myhand_wrap" class="whiteblock">
+<div id="opponent_wrap" class="whiteblock piecebox">
+    <h3>OPPONENT_HAND</h3>
+    <div id="opponent_cities" align="center"></div>
+    <div id="opponent_ressources" align="center"></div>
+</div>
+
+<div id="myhand_wrap" class="whiteblock piecebox">
     <h3>MY_HAND</h3>
-    <div id="myhand">
-    </div>
+    <div id="my_cities" align="center"></div>
+    <div id="my_ressources" align="center"></div>
 </div>
 
 <script type="text/javascript">

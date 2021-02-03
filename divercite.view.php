@@ -38,22 +38,22 @@
         /*********** Place your code below:  ************/
         $this->page->begin_block( "divercite_divercite", "square" );
         
-        $hor_scale = 96;
-        $ver_scale = 96;
+        $hor_scale = 64;
+        $ver_scale = 64;
         for( $x=1; $x<=9; $x++ ) {
             if ($x % 2 != 0) {
                 $clm = 5;
-                $pad = 0;
+                $pad = 200;
             } else {
                 $clm = 4;
-                $pad = 40;
+                $pad = 258;
             }
             for( $y=1; $y<=$clm; $y++ ) {
                 $this->page->insert_block( "square", array(
                     'X' => $x,
                     'Y' => $y,
-                    'TOP' => round( ($x-1)*$hor_scale+10 ),
-                    'LEFT' => round( ($y-1)*$ver_scale+7 + $pad )
+                    'TOP' => round( ($x)*($hor_scale+25) + ($x - 1)*(-31) ),
+                    'LEFT' => round( ($y)*($ver_scale+25) + ($y - 1)*(26) + $pad )
                 ) );
             }        
         }
